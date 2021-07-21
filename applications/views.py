@@ -63,7 +63,7 @@ class ApplicationView(View):
                 "image" : master.profile_image,
                 "name" : master.name,
                 "introduction" : master.introduction,
-                ""
+                
             })
             
 
