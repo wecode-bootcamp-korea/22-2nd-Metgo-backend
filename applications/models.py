@@ -6,10 +6,12 @@ from django.db.models.fields.related import ForeignKey
 from core.models import TimeStampModel
 
 class Application(TimeStampModel):
+
     gender_choice = (
         ('male', 'Male'),
         ('female', 'Female')
     )
+
     age     = IntegerField()
     region  = ForeignKey('masters.Region', on_delete=CASCADE)
     career  = CharField(max_length=45)

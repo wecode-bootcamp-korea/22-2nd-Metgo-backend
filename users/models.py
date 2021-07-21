@@ -1,5 +1,6 @@
 import re
 
+from django.db.models import IntegerChoices
 from django.db.models.fields import CharField, DateField, EmailField, IntegerField
 
 from core.models import TimeStampModel
@@ -10,16 +11,17 @@ PHONE_REGEX    = r'^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$'
 NAME_REGEX     = r'^[a-zA-Z가-힇]{2,10}$'
 
 class User(TimeStampModel):
-    gender_choice = (
-        ('male', 'Male'),
-        ('female', 'Female')
-    )
+    # class Gender(IntegerChoices):
+    #     male = 1
+    #     female = 2
+
     kakao_id = IntegerField()
     name     = CharField(max_length=45)
     phone    = CharField(max_length=20)
-    gender   = CharField(max_length=20, choices=gender_choice, null=True)
+    gender   = IntegerField()
     email    = EmailField(unique=True)
     birth    = DateField()
+    password = CharField(max_length=200)
     
     @classmethod
     def validate(cls,data):
