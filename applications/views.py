@@ -66,5 +66,4 @@ class ApplicationView(View):
                 
             })
             
-
         return JsonResponse({'message' : 'Success'}, status = 201)

@@ -1,5 +1,5 @@
 from django.db.models.deletion       import CASCADE
-from django.db.models.fields         import PositiveIntegerField, TextField
+from django.db.models.fields         import PositiveIntegerField, TextField, URLField
 from django.db.models.fields.related import ForeignKey
 
 from core.models import TimeStampModel

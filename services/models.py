@@ -12,7 +12,7 @@ class Category(Model):
 class Service(Model):
     name     = CharField(max_length=45)
     category = ForeignKey('Category', on_delete=PROTECT)
-    masters   = ManyToManyField('masters.Master', through='MasterService', related_name='master_services')
+    masters  = ManyToManyField('masters.Master', through='MasterService', related_name='master_services')
 
     class Meta:
         db_table = 'services'

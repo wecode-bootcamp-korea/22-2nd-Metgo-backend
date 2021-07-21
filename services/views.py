@@ -17,4 +17,3 @@ class MainView(View):
         }for service in services]
 
         return JsonResponse({'results': results}, status=200)
-

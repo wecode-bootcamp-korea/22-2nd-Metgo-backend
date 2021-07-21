@@ -1,27 +1,29 @@
 import re
 
-from django.db.models import IntegerChoices
+
+from django.db.models.enums  import TextChoices
 from django.db.models.fields import CharField, DateField, EmailField, IntegerField
 
 from core.models import TimeStampModel
 
 EMAIL_REGEX    = r'^[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$'
-PASSWORD_REGEX = r'^(?_.*[a-z])(?_.*[A-Z])(?_.*[0-9])(?_.*[!@#$%^&*()-=_+])[a-zA-Z0-9`~!@#$%^&*()_+-=;:,./<>?]{8,20}$'
+PASSWORD_REGEX = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-=_+])[a-zA-Z0-9`~!@#$%^&*()_+-=;:,./<>?]{8,20}$'
 PHONE_REGEX    = r'^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$'
 NAME_REGEX     = r'^[a-zA-Z가-힇]{2,10}$'
 
 class User(TimeStampModel):
-    # class Gender(IntegerChoices):
-    #     male = 1
-    #     female = 2
 
-    kakao_id = IntegerField()
+    class Gender(TextChoices):
+        MALE   = 'male'
+        FEMALE = 'female'
+    
+    kakao_id = IntegerField(unique=True)
     name     = CharField(max_length=45)
-    phone    = CharField(max_length=20)
-    gender   = IntegerField()
+    password = CharField(max_length=200)
+    phone    = CharField(max_length=20, unique=True)
+    gender   = CharField(max_length=20, choices=Gender.choices)
     email    = EmailField(unique=True)
     birth    = DateField()
-    password = CharField(max_length=200)
     
     @classmethod
     def validate(cls,data):
