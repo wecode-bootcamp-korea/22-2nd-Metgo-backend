@@ -4,7 +4,7 @@ from django.db.models                import Model
 from django.db.models.deletion       import CASCADE
 from django.db.models.fields         import BooleanField, CharField, DateField, EmailField, IntegerField, PositiveIntegerField, URLField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
-from django.db.models.enums          import IntegerChoices
+from django.db.models.enums          import TextChoices 
 
 from core.models import TimeStampModel
 
@@ -15,7 +15,7 @@ NAME_REGEX     = r'^[a-zA-Z가-힇]{2,10}$'
 
 class Master(TimeStampModel):
     
-    class Gender(IntegerChoices):
+    class Gender(TextChoices):
         MALE   = 'male'
         FEMALE = 'female'
     
