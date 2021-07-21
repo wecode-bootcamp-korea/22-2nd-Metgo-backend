@@ -5,12 +5,13 @@ from dateutil.relativedelta import relativedelta
 from django.core      import exceptions
 from django.http      import JsonResponse
 from django.views     import View
-from django.db.models import Q
+from django.db.models import Q, aggregates, Avg
 from django.db.utils  import DataError
 
 from masters.models import Master,Region
 from services.models import Service
 from applications.models import Application, ApplicationMaster
+from reviews.models import Review
 
 class ApplicationView(View):
     def post(self,request):
@@ -50,20 +51,22 @@ class ApplicationView(View):
             q &= Q(career__gte=career)
 
         masters = Master.objects.filter(q)
-        
-        results = []
+        reviews = Review.objects.select_related("master")
 
+        results = []
+        
         for master in masters:
             ApplicationMaster.objects.create(
                 applicaiton = user_application,
                 master = master
             )
-            
+            # sort rating
             results.append({
                 "image" : master.profile_image,
                 "name" : master.name,
                 "introduction" : master.introduction,
-                
+                "rating" : reviews.filter(master=master).aggregate(Avg("rating")),
+                "review" : reviews.filter(master=master).count()
             })
             
-        return JsonResponse({'message' : 'Success'}, status = 201)
+        return JsonResponse({'message' : results}, status = 201)

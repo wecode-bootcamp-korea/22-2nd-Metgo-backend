@@ -25,14 +25,17 @@ class Command(BaseCommand):
         seeder = Seed.seeder()
         seeder.add_entity(Master, number, {
             "name" : lambda x : Faker("ko_KR").name(),
+            "certification": lambda x : random.randint(0,1),
+            "business": lambda x : random.randint(0,1),
             "kakao_id" : lambda x : random.randint(1,100000),
             "password" : lambda x : bcrypt.hashpw( '1234qwer'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             "phone" : lambda x : '010'+str(random.randint(1000,9999))+str(random.randint(1000,9999)),
             "gender" : lambda x : random.choice(gender_choice),
             "email" : lambda x : seeder.faker.email() if not User.objects.filter(email = seeder.faker.email()) else ValueError,
             "birth" : lambda x : Faker().date(),
-            "regions" : lambda x : random.choice(Region.objects.all()),
+            "region" : lambda x : random.choice(Region.objects.all()),
             "main_service" : lambda x : random.choice(Service.objects.all()),
+            "profile_image" : lambda x : None,
             "career" : lambda x : random.randint(0,30),
         })
         seeder.execute()
