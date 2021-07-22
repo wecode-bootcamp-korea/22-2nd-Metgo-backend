@@ -70,3 +70,4 @@ class ApplicationView(View):
             })
             
         return JsonResponse({'message' : results}, status = 201)
+
