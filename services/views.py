@@ -37,7 +37,7 @@ class ServiceDetailView(View):
             "rating"       : rating["rating__avg"],
             "masters"      : MasterService.objects.filter(service=service).count(),
             "applications" : Application.objects.filter(service=service).count(),
-            "reviews"      : reviews.count()
+            "reviews"      : reviews.count(),
         }]
 
         return JsonResponse({'results': results}, status=200)
