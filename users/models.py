@@ -1,6 +1,5 @@
 import re
 
-
 from django.db.models.enums  import TextChoices
 from django.db.models.fields import CharField, DateField, EmailField, IntegerField
 
@@ -12,7 +11,7 @@ PHONE_REGEX    = r'^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$'
 NAME_REGEX     = r'^[a-zA-Z가-힇]{2,10}$'
 
 class User(TimeStampModel):
-
+    
     class Gender(TextChoices):
         MALE   = 'male'
         FEMALE = 'female'

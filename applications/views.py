@@ -51,7 +51,9 @@ class ApplicationView(View):
             q &= Q(career__gte=career)
 
         masters = Master.objects.filter(q)
-        reviews = Review.objects.select_related("master")
+        masters.save()
+        Review.objects.all().aggregate(Avg("rating"))
+        reviews = Review.objects.select_related("masters")
 
         results = []
         
