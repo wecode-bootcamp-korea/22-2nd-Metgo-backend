@@ -8,6 +8,8 @@ class Quotation(TimeStampModel):
     application_master = ForeignKey('applications.ApplicationMaster', on_delete=CASCADE)
     price              = DecimalField(max_digits=10, decimal_places=2, null=True)
     is_completed       = BooleanField(null=True)
+    master             = ForeignKey('masters.Master', on_delete=CASCADE, related_name='hired_master')
+
 
     class Meta:
         db_table = 'quotations'
