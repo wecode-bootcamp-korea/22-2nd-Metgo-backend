@@ -25,10 +25,10 @@ class Application(TimeStampModel):
         TEN_YEARS          = 10
         OVER_FIFTEEN_YEARS = 15
 
-    age     = PositiveIntegerField(choices=Age.choices)
-    region  = ForeignKey('masters.Region', on_delete=CASCADE)
-    career  = PositiveIntegerField(choices=Career.choices)
-    gender  = CharField(max_length=20, choices=Gender.choices)
+    age     = PositiveIntegerField(choices=Age.choices, null=True)
+    region  = ForeignKey('masters.Region', on_delete=CASCADE, null=True)
+    career  = PositiveIntegerField(choices=Career.choices, null=True)
+    gender  = CharField(max_length=20, choices=Gender.choices, null=True)
     user    = ForeignKey('users.User', on_delete=CASCADE)
     service = ForeignKey('services.Service', on_delete=CASCADE)
     

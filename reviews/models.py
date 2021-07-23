@@ -1,5 +1,5 @@
 from django.db.models.deletion       import CASCADE
-from django.db.models.fields         import PositiveIntegerField, TextField, URLField
+from django.db.models.fields         import PositiveIntegerField, TextField 
 from django.db.models.fields.related import ForeignKey
 
 from core.models import TimeStampModel
@@ -9,6 +9,7 @@ class Review(TimeStampModel):
     rating  = PositiveIntegerField()
     user    = ForeignKey('users.User', on_delete=CASCADE)
     master  = ForeignKey('masters.Master', on_delete=CASCADE)
+    service = ForeignKey('services.Service', on_delete=CASCADE, related_name='service_reviews')
 
     class Meta:
         db_table = 'reviews'
