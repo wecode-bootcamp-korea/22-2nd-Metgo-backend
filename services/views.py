@@ -30,11 +30,10 @@ class ServiceView(View):
 
         return JsonResponse({'services': service}, status=200)
 
-## review/ master/ application service 에서 부르기
 class ServiceDetailView(View):
     def get(self, request, service_id):
         service = Service.objects.get(id=service_id)
-        reviews = Review.objects.select_related("master").filter(master__services=service)
+        reviews = service.service_reviews.all()
         rating = reviews.aggregate(Avg("rating"))
         results = [{
             "service_id"   : service.id,

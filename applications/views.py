@@ -31,7 +31,7 @@ class ApplicationView(View):
             q = Q()
             q &= Q(main_service = service)
             q &= Q(gender=gender)
-            q |= Q(region= region)
+            q &= Q(region= region)
             masters = Master.objects.filter(q)
             print(q)
             print(len(masters))
