@@ -16,13 +16,13 @@ class User(TimeStampModel):
         MALE   = 'male'
         FEMALE = 'female'
     
-    kakao_id = IntegerField(unique=True)
-    name     = CharField(max_length=45)
+    kakao_id = IntegerField(unique=True, null=True)
+    name     = CharField(max_length=45, null=True)
     password = CharField(max_length=200)
-    phone    = CharField(max_length=20, unique=True)
-    gender   = CharField(max_length=20, choices=Gender.choices)
+    phone    = CharField(max_length=20, unique=True, null=True)
+    gender   = CharField(max_length=20, choices=Gender.choices, null=True)
     email    = EmailField(unique=True)
-    birth    = DateField()
+    birth    = DateField(null=True)
     
     @classmethod
     def validate(cls,data):

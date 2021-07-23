@@ -19,18 +19,18 @@ class Master(TimeStampModel):
         MALE   = 'male'
         FEMALE = 'female'
     
-    kakao_id      = IntegerField(unique=True)
+    kakao_id      = IntegerField(unique=True, null=True)
     certification = BooleanField(null=True)
     bussiness     = BooleanField(null=True)
     introduction  = CharField(max_length=100, null=True)
     description   = CharField(max_length=300, null=True)
-    name          = CharField(max_length=45)
-    phone         = CharField(max_length=20, unique=True)
+    name          = CharField(max_length=45, null=True)
+    phone         = CharField(max_length=20, unique=True, null=True)
     password      = CharField(max_length=200)
     email         = EmailField(unique=True)
-    gender        = CharField(max_length=20, choices=Gender.choices)
-    birth         = DateField()
-    region        = ForeignKey('Region', on_delete=CASCADE)
+    gender        = CharField(max_length=20, choices=Gender.choices, null=True)
+    birth         = DateField(null=True)
+    region        = ForeignKey('Region', on_delete=CASCADE, null=True)
     profile_image = URLField(max_length=2000, null=True)
     main_service  = ForeignKey('services.Service', on_delete=CASCADE, related_name='services')
     career        = PositiveIntegerField()
@@ -50,6 +50,13 @@ class Master(TimeStampModel):
 
     class Meta:
         db_table = 'masters'
+
+class UploadedImage(TimeStampModel):
+    uploaded_image = URLField()
+    master         = ForeignKey('Master', on_delete=CASCADE, related_name='uploaded_images')
+
+    class Meta:
+        db_table = 'uploaded_images'
 
 
 class Region(Model):
