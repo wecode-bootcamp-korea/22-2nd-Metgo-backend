@@ -39,9 +39,9 @@ class ServiceDetailView(View):
             "service_id"   : service.id,
             "name"         : service.name,
             "rating"       : rating["rating__avg"],
-            "masters"      : service.service_masters.all().count(),
-            "applications" : service.application_set.all().count(),
-            "reviews"      : reviews.count(),
+            "활동 고수"      : service.service_masters.all().count(),
+            "누적 요청서"     : service.application_set.all().count(),
+            "리뷰 수"        : reviews.count(),
         }]
 
         return JsonResponse({'results': results}, status=200)

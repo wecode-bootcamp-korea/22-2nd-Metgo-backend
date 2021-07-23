@@ -8,6 +8,7 @@ from django.views     import View
 from django.db.models import Q, aggregates, Avg
 from django.db.utils  import DataError
 
+from users.models import User
 from masters.models import Master,Region
 from services.models import Service
 from applications.models import Application, ApplicationMaster
@@ -17,57 +18,55 @@ class ApplicationView(View):
     def post(self,request):
         try:
             data    = json.loads(request.body)
-            user    = data["user_id"]
+            user    = User.objects.get(id=data["user_id"])
             age     = data["age"]
             career  = data["carrer"]
-            gender  = data["gender"]
             region  = Region.objects.get(name=data["region"])
             service = Service.objects.get(id=data["service_id"])
             
+            gender_choice={"남":"male", "여":"female", "무관":None}
+            gender  = gender_choice[data["gender"]]
+
             today = datetime.date.today()
             birth = today - relativedelta(year = today.year-age)
-
-            q = Q()
+            
             q = Q()
             q &= Q(main_service = service)
-            q &= Q(gender=gender)
+            if gender:
+                q &= Q(gender=gender)
+            
             q &= Q(region= region)
             masters = Master.objects.filter(q)
-            print(q)
-            print(len(masters))
+
             if masters:
-                if age !=50:
-                    q &= Q(birth__lte = birth)&Q(birth__gt = birth-relativedelta(year= birth.year-10))
-                if age ==50:
-                    q &= Q(birth__lte = birth)
-                # if Master.objects.filter(q):
-                    
-            print('q',q)
-            print('===================================0===================================')
+                if age != '무관':
+                    if age !=50:
+                        q &= Q(birth__lte = birth)&Q(birth__gt = birth-relativedelta(year= birth.year-10))
+                    if age ==50:
+                        q &= Q(birth__lte = birth)
+                    if Master.objects.filter(q):
+                        masters = Master.objects.filter(q)
+
             if masters:
                 if career != 15:
                     q &= Q(career__gte=career)&Q(career__lt=career+5)
                 if career == 15:
                     q &= Q(career__gte=career)
-                masters = Master.objects.filter(q)
-            print('q',q)
-            print('===================================1===================================')
-            masters = Master.objects.filter(q)
-            print(masters)
-            print('=========================================2==================================')
-            
+                if Master.objects.filter(q):
+                    masters = Master.objects.filter(q)
+
             if not masters:
                 return JsonResponse({'message' : '조건에 맞는 고수가 없습니다'}, status = 201)
-
-            user_application = Application.objects.update_or_create(
+            
+            user_application = Application.objects.create(
                 age = age,
                 career = career,
                 gender = gender,
                 region = region,
                 service = service,
-                user_id = user
-            )            
-
+                user = user
+            )
+            
             for master in masters:
                 ApplicationMaster.objects.create(
                     application = user_application,
@@ -76,7 +75,7 @@ class ApplicationView(View):
                 
             return JsonResponse({'message' : 'Success'}, status = 201)
         
-        except KeyError:
+        except :
             return JsonResponse({'message' : 'KEY ERROR'}, status = 404)
 
 class MasterMatchingView(View):
