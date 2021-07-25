@@ -28,13 +28,13 @@ class ServiceView(View):
             "image" : service.image_set.all()[0].image,
         } for service in services]
 
-        return JsonResponse({'services': service}, status=200)
+        return JsonResponse({'services' : service}, status=200)
 
 class ServiceDetailView(View):
     def get(self, request, service_id):
         service = Service.objects.get(id=service_id)
         reviews = service.service_reviews.all()
-        rating = reviews.aggregate(Avg("rating"))
+        rating  = reviews.aggregate(Avg("rating"))
         results = [{
             "service_id"   : service.id,
             "name"         : service.name,
@@ -44,4 +44,4 @@ class ServiceDetailView(View):
             "리뷰 수"        : reviews.count(),
         }]
 
-        return JsonResponse({'results': results}, status=200)
+        return JsonResponse({'results' : results}, status=200)

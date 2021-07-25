@@ -1,7 +1,7 @@
 from django.db.models.base           import Model
 from django.db.models.deletion       import CASCADE
 from django.db.models.enums          import IntegerChoices, TextChoices
-from django.db.models.fields         import PositiveIntegerField, CharField
+from django.db.models.fields         import IntegerField, PositiveIntegerField, CharField
 from django.db.models.fields.related import ForeignKey
 
 from core.models import TimeStampModel
@@ -38,6 +38,8 @@ class Application(TimeStampModel):
 class ApplicationMaster(Model):
     application = ForeignKey('Application', on_delete=CASCADE)
     master      = ForeignKey('masters.Master', on_delete=CASCADE)
+    level       = IntegerField(default=1)
 
     class Meta:
         db_table = 'application_masters'
+        ordering = ['application', '-level']

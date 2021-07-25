@@ -21,7 +21,7 @@ class Master(TimeStampModel):
     
     kakao_id      = IntegerField(unique=True, null=True)
     certification = BooleanField(null=True)
-    business     = BooleanField(null=True)
+    business      = BooleanField(null=True)
     introduction  = CharField(max_length=100, null=True)
     description   = CharField(max_length=300, null=True)
     name          = CharField(max_length=45, null=True)
