@@ -107,16 +107,17 @@ class ApplicationView(View):
 
 class MasterMatchingView(View):
     def get(self, request, service_id):
-        user        = request.GET.get('user_id','')
-        service     = Service.objects.get(id = service_id)
-        application = Application.objects.select_related('service').filter(service=service).filter(user_id = user)
-        reviews     = Review.objects.select_related("master")
-        results     = [{
-                "image"        : application.master.profile_image,
-                "name"         : application.master.name,
-                "introduction" : application.master.introduction,
-                "rating"       : reviews.filter(master = application.master).aggregate(Avg("rating"))["rating__avg"],
-                "review"       : reviews.filter(master = application.master).count()
-            } for application in ApplicationMaster.objects.select_related('master').filter(application=application)]
+        user             = request.GET.get('user_id','')
+        service          = Service.objects.get(id = service_id)
+        application      = Application.objects.select_related('service').filter(service=service).get(user_id = user)
+        matching_masters = ApplicationMaster.objects.select_related('master').filter(application=application).order_by("-level")
+        reviews          = Review.objects.select_related('master')
+        results          = [{
+                "image"        : matching_master.master.profile_image,
+                "name"         : matching_master.master.name,
+                "introduction" : matching_master.master.introduction,
+                "rating"       : reviews.filter(master = matching_master.master).aggregate(Avg('rating'))["rating__avg"],
+                "review"       : reviews.filter(master = matching_master.master).count()
+            } for matching_master in matching_masters]
 
         return JsonResponse({'results' : results}, status = 200)
