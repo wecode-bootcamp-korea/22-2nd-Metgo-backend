@@ -2,23 +2,22 @@ import json
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from django.core      import exceptions
-from django.http      import JsonResponse
-from django.views     import View
-from django.db.models import Q, aggregates, Avg
-from django.db.utils  import DataError
+from django.core            import exceptions
+from django.http            import JsonResponse
+from django.views           import View
+from django.db.models       import Q, aggregates, Avg
+from django.db.utils        import DataError
 
-from users.models        import User
-from masters.models      import Master,Region
-from services.models     import Service
-from applications.models import Application, ApplicationMaster
-from reviews.models      import Review
+from users.models           import User
+from masters.models         import Master,Region
+from services.models        import Service
+from applications.models    import Application, ApplicationMaster
+from reviews.models         import Review
 
 class ApplicationView(View):
     def post(self,request):
         try:
             data    = json.loads(request.body)
-            print(data)
             user    = User.objects.get(id = data["user_id"])
             age     = data["age"]
             career  = data["career"]
@@ -27,8 +26,6 @@ class ApplicationView(View):
 
             gender_choice = {"남" : "male", "여" : "female", "무관" : None}
             gender        = gender_choice[data["gender"]]
-            
-            print('user',user,'age',age,'career',career,'region',region,'service',service,data["gender"])
             
             today = datetime.date.today()
             birth = today - relativedelta(year = today.year-age)
@@ -45,10 +42,8 @@ class ApplicationView(View):
             masters1 = Master.objects.filter(q)
             masters.append(masters1)
             if not masters1:
-                return JsonResponse({'message' : '조건에 맞는 고수가 없습니다'}, status = 201)            
+                return JsonResponse({'message' : 'Does not matching masters'}, status = 201)
 
-            print('masters1',masters1)
-            print('=================1=================1==================1===============')
             if masters1:
                 if age != '무관':
                     if age != 50:
@@ -59,8 +54,6 @@ class ApplicationView(View):
                         global masters2
                         masters2 = masters1.filter(q2)
                         masters.append(masters2)
-                        print('masters2', masters2)
-                print('=================2=================2==================2===============')
                 if career != 15:
                     q3 &= Q(career__gte = career)&Q(career__lt = career+5)
                 if career == 15:
@@ -69,7 +62,6 @@ class ApplicationView(View):
                     global masters3
                     masters3 = masters1.filter(q3)
                     masters.append(masters3)
-                    print('masters3', masters3)
             
             if masters1:
                 global masters4
@@ -86,7 +78,7 @@ class ApplicationView(View):
             )
             if not created:
                 ApplicationMaster.objects.filter(application=user_application).delete()
-                
+            
             for master in masters1:
                 level = 0
                 for i in masters:
@@ -101,8 +93,7 @@ class ApplicationView(View):
                 
             return JsonResponse({'message' : 'Success'}, status = 201)
         
-        except KeyError as e:
-            print(e)
+        except KeyError:
             return JsonResponse({'message' : 'KEY ERROR'}, status = 404)
 
 class MasterMatchingView(View):

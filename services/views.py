@@ -34,14 +34,14 @@ class ServiceDetailView(View):
     def get(self, request, service_id):
         service = Service.objects.get(id=service_id)
         reviews = service.service_reviews.all()
-        rating  = reviews.aggregate(Avg("rating"))
+        rating  = reviews.aggregate(average=Avg("rating"))
         results = [{
             "service_id"   : service.id,
             "name"         : service.name,
-            "rating"       : rating["rating__avg"],
-            "활동 고수"      : service.service_masters.all().count(),
-            "누적 요청서"     : service.application_set.all().count(),
-            "리뷰 수"        : reviews.count(),
+            "rating"       : rating.average,
+            "masters"      : service.service_masters.all().count(),
+            "applications" : service.application_set.all().count(),
+            "reviews"      : reviews.count(),
         }]
 
         return JsonResponse({'results' : results}, status=200)
