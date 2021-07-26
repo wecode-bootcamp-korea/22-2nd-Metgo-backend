@@ -33,7 +33,7 @@ class Master(TimeStampModel):
     region        = ForeignKey('Region', on_delete=CASCADE, null=True)
     profile_image = URLField(max_length=2000, null=True)
     main_service  = ForeignKey('services.Service', on_delete=CASCADE, related_name='services')
-    career        = PositiveIntegerField()
+    career        = PositiveIntegerField(null=True)
     services      = ManyToManyField('services.Service', through='services.MasterService', related_name='service_masters')
 
     @classmethod
