@@ -6,7 +6,7 @@ from core.models import TimeStampModel
 
 class Quotation(TimeStampModel):
     application_master = ForeignKey('applications.ApplicationMaster', on_delete=CASCADE)
-    price              = DecimalField(max_digits=10, decimal_places=2)
+    price              = DecimalField(max_digits=10, decimal_places=2, null=True)
     is_completed       = BooleanField()
     master             = ForeignKey('masters.Master', on_delete=CASCADE)
 
