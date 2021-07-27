@@ -19,7 +19,7 @@ class ApplicationView(View):
         try:
             data    = json.loads(request.body)
             user    = User.objects.get(id = data["user_id"])
-            age     = data["age"] 
+            age     = data["age"] if data["age"] != '무관' else None
             career  = data["career"]
             region  = Region.objects.get(name = data["region"])
             service = Service.objects.get(id  = data["service_id"])
@@ -27,16 +27,15 @@ class ApplicationView(View):
             gender_choice = {"남" : "male", "여" : "female", "무관" : None}
             gender        = gender_choice[data["gender"]]
             
-            today = datetime.date.today()
-            birth = today - relativedelta(year = today.year-age)
-            
             q  = Q()
             q &= Q(main_service = service)
             
             if gender:
                 q &= Q(gender = gender)
             
-            if age != '무관':
+            if age:
+                today = datetime.date.today()
+                birth = today - relativedelta(year = today.year-age)
                 if age != 50:
                     q  &= Q(birth__lte = birth)&Q(birth__gt = birth-relativedelta(year= birth.year-10))
                 if age == 50:
@@ -47,8 +46,14 @@ class ApplicationView(View):
             if career == 15:
                 q &= Q(career__gte = career)
             
-            masters = Master.objects.filter(Q)
+            print(q)
+            print('==================1======================')
             
+
+            masters = Master.objects.filter(q)
+            print(masters)
+            print('==============================2===============================')
+
             if not masters:
                 return JsonResponse({'message' : 'Does not matching masters'}, status = 201)
 
@@ -71,7 +76,8 @@ class ApplicationView(View):
                 
             return JsonResponse({'message' : 'Success'}, status = 201)
         
-        except KeyError:
+        except Exception as e:
+            print(e)
             return JsonResponse({'message' : 'KEY ERROR'}, status = 404)
 
 class MasterMatchingView(View):
