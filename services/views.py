@@ -32,6 +32,9 @@ class ServiceView(View):
 
 class ServiceDetailView(View):
     def get(self, request, service_id):
+        if not Service.objects.get(id=service_id).exists():
+            return JsonResponse({'message' : 'Not Found page'}, status=404)
+
         service = Service.objects.get(id=service_id)
         reviews = service.service_reviews.all()
         rating  = reviews.aggregate(average=Avg("rating"))
