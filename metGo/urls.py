@@ -7,4 +7,5 @@ urlpatterns = [
     path('<int:category_id>', ServiceView.as_view()),
     path('services', include('services.urls')),
     path('applications', include('applications.urls')),
+    path('quotations', include('quotations.urls')),
 ]
