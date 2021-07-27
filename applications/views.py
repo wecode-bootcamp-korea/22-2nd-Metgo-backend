@@ -19,7 +19,7 @@ class ApplicationView(View):
         try:
             data    = json.loads(request.body)
             user    = User.objects.get(id = data["user_id"])
-            age     = data["age"]
+            age     = data["age"] 
             career  = data["career"]
             region  = Region.objects.get(name = data["region"])
             service = Service.objects.get(id  = data["service_id"])
