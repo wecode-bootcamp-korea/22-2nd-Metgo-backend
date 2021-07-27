@@ -33,10 +33,10 @@ class Command(BaseCommand):
             "gender" : lambda x : random.choice(gender_choice),
             "email" : lambda x : seeder.faker.email() if not User.objects.filter(email = seeder.faker.email()) else ValueError,
             "birth" : lambda x : Faker().date(),
-            "region" : lambda x : random.choice(Region.objects.all()),
-            "main_service" : lambda x : random.choice(Service.objects.all()),
+            "region" : lambda x : random.choice(Region.objects.filter(id__lte=4)),
+            "main_service" : lambda x : random.choice(Service.objects.filter(id__lte=4)),
             "profile_image" : lambda x : None,
-            "career" : lambda x : random.randint(0,30),
+            "career" : lambda x : random.randint(0,20),
         })
         for i in Master.objects.all():
             MasterService.objects.create(
