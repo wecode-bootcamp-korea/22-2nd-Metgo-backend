@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 
 from users.models import User
 from masters.models import Region, Master
-from services.models import Service
+from services.models import Service, MasterService
 
 class Command(BaseCommand):
 
@@ -38,5 +38,11 @@ class Command(BaseCommand):
             "profile_image" : lambda x : None,
             "career" : lambda x : random.randint(0,30),
         })
+        for i in Master.objects.all():
+            MasterService.objects.create(
+                master = i,
+                service = i.main_service
+            )
+            
         seeder.execute()
         self.stdout.write(self.style.SUCCESS({f'{number}users created'}))
