@@ -31,43 +31,27 @@ class ApplicationView(View):
             birth = today - relativedelta(year = today.year-age)
             
             q  = Q()
-            q2 = Q()
-            q3 = Q()
             q &= Q(main_service = service)
             
             if gender:
                 q &= Q(gender = gender)
             
-            masters = []
-            masters1 = Master.objects.filter(q)
-            masters.append(masters1)
-            if not masters1:
+            if age != '무관':
+                if age != 50:
+                    q  &= Q(birth__lte = birth)&Q(birth__gt = birth-relativedelta(year= birth.year-10))
+                if age == 50:
+                    q  &= Q(birth__lte = birth)
+
+            if career != 15:
+                q &= Q(career__gte = career)&Q(career__lt = career+5)
+            if career == 15:
+                q &= Q(career__gte = career)
+            
+            masters = Master.objects.filter(Q)
+            
+            if not masters:
                 return JsonResponse({'message' : 'Does not matching masters'}, status = 201)
 
-            if masters1:
-                if age != '무관':
-                    if age != 50:
-                        q2  &= Q(birth__lte = birth)&Q(birth__gt = birth-relativedelta(year= birth.year-10))
-                    if age == 50:
-                        q2  &= Q(birth__lte = birth)
-                    if masters1.filter(q2):
-                        global masters2
-                        masters2 = masters1.filter(q2)
-                        masters.append(masters2)
-                if career != 15:
-                    q3 &= Q(career__gte = career)&Q(career__lt = career+5)
-                if career == 15:
-                    q3 &= Q(career__gte = career)
-                if masters1.filter(q3):
-                    global masters3
-                    masters3 = masters1.filter(q3)
-                    masters.append(masters3)
-            
-            if masters1:
-                global masters4
-                masters4 = masters1.filter(region = region)
-                masters.append(masters4)
-            
             user_application, created = Application.objects.update_or_create(
                 service  = service,
                 user     = user,
@@ -79,16 +63,10 @@ class ApplicationView(View):
             if not created:
                 ApplicationMaster.objects.filter(application=user_application).delete()
             
-            for master in masters1:
-                level = 0
-                for i in masters:
-                    if master in i:
-                        level += 1
-
+            for master in masters:
                 ApplicationMaster.objects.create(
                     application = user_application,
                     master      = master,
-                    level       = level
                 )
                 
             return JsonResponse({'message' : 'Success'}, status = 201)
@@ -101,7 +79,7 @@ class MasterMatchingView(View):
         user             = request.GET.get('user_id','')
         service          = Service.objects.get(id = service_id)
         application      = Application.objects.select_related('service').filter(service=service).get(user_id = user)
-        matching_masters = ApplicationMaster.objects.select_related('master').filter(application=application).order_by("-level")
+        matching_masters = ApplicationMaster.objects.select_related('master').filter(application=application)
         reviews          = Review.objects.select_related('master')
         results          = [{
                 "image"        : matching_master.master.profile_image,
