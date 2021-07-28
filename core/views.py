@@ -1,4 +1,7 @@
 import jwt
+import boto3
+import uuid
+
 from django.http import JsonResponse
 from my_settings import SECRET_KEY, ALGORITHM
 
@@ -33,12 +36,10 @@ def master_signin_check(func):
 
     return wrapper
 
-import boto3
-import uuid
 class AWSAPI:
     def __init__(self, aws_access_key, aws_secret_key, bucket):
         self.bucket      = bucket
-        self.storage_url = 'https://' + bucket + '.s3.us-east-2.amazonaws.com/'
+        self.storage_url = 'https://' + bucket + '.s3.ap-northeast-2.amazonaws.com/'
         self.client      = boto3.client(
             's3',
             aws_access_key_id     = aws_access_key,

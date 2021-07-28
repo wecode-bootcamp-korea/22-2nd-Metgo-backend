@@ -7,7 +7,7 @@ from django.db.models       import Q, Avg
 from users.models           import User
 from masters.models         import Master,Region
 from services.models        import Service
-from applications.models    import Application, ApplicationMaster
+from applications.models    import Application 
 from reviews.models         import Review
 from core.views             import user_signin_check
 class ApplicationView(View):

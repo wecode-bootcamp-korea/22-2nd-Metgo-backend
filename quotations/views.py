@@ -11,9 +11,9 @@ class QuotationView(View):
     @user_signin_check
     def post(self, request):
         data        = json.loads(request.body)
-        user_id     = request.user
+        user     = request.user
         master      = Master.objects.get(id=data["master_id"])
-        application = Application.objects.filter(user_id=user_id).get(service=master.main_service)
+        application = Application.objects.filter(user=user).get(service=master.main_service)
         Quotation.objects.create(
             application = application,
             master      = master,
@@ -23,8 +23,8 @@ class QuotationView(View):
 
     @master_signin_check
     def get(self, request):
-        master_id  = request.master
-        quotations = Quotation.objects.select_related('application_master').filter(master_id=master_id)
+        master  = request.master
+        quotations = Quotation.objects.select_related('application').filter(master=master)
         results    = [{
             "quotation_id" : quotation.id,
             "user_id" : quotation.application.user.id,

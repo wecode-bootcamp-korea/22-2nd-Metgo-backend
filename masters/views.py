@@ -1,3 +1,4 @@
+import jwt
 from django.http                  import JsonResponse
 from django.views import View
 from django.http  import JsonResponse
@@ -41,7 +42,7 @@ class MasterSignupView(View):
 
             Master.objects.create(
                 name            = data["name"],
-               password        = hashed_password.decode(),
+                password        = hashed_password.decode(),
                 email           = email,
             )
             return JsonResponse({"message":"SUCCESS"}, status=201)
@@ -123,7 +124,7 @@ class MasterView(View):
                     'profile_image'  : master.profile_image,
                     'name'           : master.name,
                     'main_service'   : master.main_service.name,
-                    'rating'         : user_rating,
+                    'average_rating' : user_rating,
                     'review_counts'  : review.count(),
                     'introduction'   : master.introduction,
                     'region'         : master.region.name,
@@ -148,7 +149,9 @@ class MasterView(View):
     @master_signin_check
     def patch(self, request):
         data   = json.loads(request.body)
+        print(data)
         master = request.master
+        print(request.master)
         master.name          = data.get("name", master.name)
         master.introduction  = data.get("introduction", master.introduction)
         master.career        = data.get("career", master.career)

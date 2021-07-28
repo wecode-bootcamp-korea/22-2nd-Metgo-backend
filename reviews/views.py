@@ -12,10 +12,10 @@ class MasterReviewView(View):
 
             master      = Master.objects.get(id=master_id)
             reviews     = master.review_set.filter(master_id=master.id)
-            page        = request.GET.get('page', None)
-            paginator   = Paginator(reviews, 5)
-            review_list = paginator.get_page(page)
-            total_pages = paginator.page_range
+            #  page        = request.GET.get('page', None)
+            #  paginator   = Paginator(reviews, 5)
+            #  review_list = paginator.get_page(page)
+            #  total_pages = paginator.page_range
 
             results = [
                 {
@@ -23,10 +23,10 @@ class MasterReviewView(View):
                     'rating'     : review.rating,
                     'created_at' : review.created_at,
                     'content'    : review.content
-                } for review in review_list
+                } for review in reviews
             ]
 
-            return JsonResponse({'results':results, 'total_pages':len(total_pages)}, status=200)
+            return JsonResponse({'results':results}, status=200)
 
         except KeyError:
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)
