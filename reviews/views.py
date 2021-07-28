@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from django.http                  import JsonResponse
+from django.views                 import View
+from django.core.paginator        import Paginator
 
-# Create your views here.
+from masters.models    import Master
+
+class MasterReviewView(View):
+    def get(self, request, master_id):
+        try:
+            if not Master.objects.filter(id=master_id).exists():
+                return JsonResponse({'message':'DOES_NOT_EXISTS'}, status=400)
+
+            master      = Master.objects.get(id=master_id)
+            reviews     = master.review_set.filter(master_id=master.id)
+            page        = request.GET.get('page', None)
+            paginator   = Paginator(reviews, 5)
+            review_list = paginator.get_page(page)
+            total_pages = paginaor.page_range
+
+            results = [
+                {
+                    'name'       : review.user.name,
+                    'rating'     : review.rating,
+                    'created_at' : review.created_at,
+                    'content'    : review.content
+                } for review in review_list
+            ]
+
+            return JsonResponse({'results':results, 'total_pages':len(total_pages)}, status=200)
+
+        except KeyError:
+            return JsonResponse({'message': 'KEY_ERROR'}, status=400)
