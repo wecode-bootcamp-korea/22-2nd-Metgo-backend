@@ -9,5 +9,4 @@ urlpatterns = [
     path('users', include('users.urls')),
     path('masters', include('masters.urls')),
     path('reviews', include('reviews.urls'))
-
 ]

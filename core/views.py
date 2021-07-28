@@ -32,3 +32,26 @@ def master_signin_check(func):
             return JsonResponse({"message":"DECODE_ERROR"}, status=400)
 
     return wrapper
+
+import boto3
+import uuid
+class AWSAPI:
+    def __init__(self, aws_access_key, aws_secret_key, bucket):
+        self.bucket      = bucket
+        self.storage_url = 'https://' + bucket + '.s3.us-east-2.amazonaws.com/'
+        self.client      = boto3.client(
+            's3',
+            aws_access_key_id     = aws_access_key,
+            aws_secret_access_key = aws_secret_key
+        )
+    def upload_file(self, file):
+        filename = uuid.uuid4().hex
+        self.client.upload_fileobj(
+            file,
+            self.bucket,
+            filename,
+            ExtraArgs = {
+                'ContentType': file.content_type
+            }
+        )
+        return self.storage_url + filename

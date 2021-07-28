@@ -31,6 +31,7 @@ class ApplicationView(View):
             return JsonResponse({ 'message' : 'Success' }, status = 201)
         except KeyError:
             return JsonResponse({ 'message' : 'KEY ERROR' }, status = 404)
+
 class MastersView(View):
     @user_signin_check
     def get(self, request, service_id):

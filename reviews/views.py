@@ -15,7 +15,7 @@ class MasterReviewView(View):
             page        = request.GET.get('page', None)
             paginator   = Paginator(reviews, 5)
             review_list = paginator.get_page(page)
-            total_pages = paginaor.page_range
+            total_pages = paginator.page_range
 
             results = [
                 {
