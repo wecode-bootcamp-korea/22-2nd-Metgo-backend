@@ -30,8 +30,6 @@ class User(TimeStampModel):
             return False
         if not re.match(PASSWORD_REGEX, data["password"]):
             return False
-        if not re.match(PHONE_REGEX, data["phone"]):
-            return False
         if not re.match(NAME_REGEX, data["name"]):
             return False
         return True
