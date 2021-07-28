@@ -34,10 +34,3 @@ class Application(TimeStampModel):
     
     class Meta:
         db_table = 'applications'
-
-class ApplicationMaster(Model):
-    application = ForeignKey('Application', on_delete=CASCADE)
-    master      = ForeignKey('masters.Master', on_delete=CASCADE)
-
-    class Meta:
-        db_table = 'application_masters'

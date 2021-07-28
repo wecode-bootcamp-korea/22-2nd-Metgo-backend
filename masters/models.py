@@ -32,17 +32,15 @@ class Master(TimeStampModel):
     birth         = DateField(null=True)
     region        = ForeignKey('Region', on_delete=CASCADE, null=True)
     profile_image = URLField(max_length=2000, null=True)
-    main_service  = ForeignKey('services.Service', on_delete=CASCADE, related_name='services')
+    main_service  = ForeignKey('services.Service', on_delete=CASCADE, related_name='services', null=True)
     career        = PositiveIntegerField(null=True)
-    services      = ManyToManyField('services.Service', through='services.MasterService', related_name='service_masters')
+    services      = ManyToManyField('services.Service', through='services.MasterService', related_name='service_masters', null=True)
 
     @classmethod
     def validate(cls,data):
         if not re.match(EMAIL_REGEX, data["email"]):
             return False
         if not re.match(PASSWORD_REGEX, data["password"]):
-            return False
-        if not re.match(PHONE_REGEX, data["phone"]):
             return False
         if not re.match(NAME_REGEX, data["name"]):
             return False
