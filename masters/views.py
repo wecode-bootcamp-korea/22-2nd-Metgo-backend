@@ -1,4 +1,10 @@
 from django.http                  import JsonResponse
+from django.views import View
+from django.http  import JsonResponse
+
+from my_settings    import SECRET_KEY, ALGORITHM
+from masters.models import Master
+
 from django.views                 import View
 from django.db.models.aggregates  import Avg
 
@@ -43,11 +49,6 @@ class MasterSignupView(View):
         except KeyError:
             return JsonResponse({"message":"KEY_ERROR"}, status=400) 
 
-from django.views import View
-from django.http  import JsonResponse
-
-from my_settings    import SECRET_KEY, ALGORITHM
-from masters.models import Master
 
 class MasterSigninView(View):
     def post(self, request):
@@ -126,7 +127,7 @@ class MasterView(View):
                     'review_counts'  : review.count(),
                     'introduction'   : master.introduction,
                     'region'         : master.region.name,
-                     'career'         : master.career,
+                    'career'         : master.career,
                     'certification'  : master.certification,
                     'business'       : master.business,
                     'description'    : master.description,

@@ -17,7 +17,7 @@ class ApplicationView(View):
             data    = json.loads(request.body)
             age     = data["age"] if data["age"] != '무관' else None
             career  = data["career"]
-            regio  = Region.objects.get(name = data["region"])
+            region  = Region.objects.get(name = data["region"])
             gender_choice = { "남" : "male", "여" : "female", "무관" : None }
             gender        = gender_choice[data["gender"]]
             Application.objects.update_or_create(
