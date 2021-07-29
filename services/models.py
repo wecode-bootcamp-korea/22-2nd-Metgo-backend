@@ -11,7 +11,7 @@ class Category(Model):
 
 class Service(Model):
     name     = CharField(max_length=45)
-    category = ForeignKey('Category', on_delete=PROTECT)
+    category = ForeignKey('Category', on_delete=CASCADE)
     masters  = ManyToManyField('masters.Master', through='MasterService', related_name='master_services')
 
     class Meta:
