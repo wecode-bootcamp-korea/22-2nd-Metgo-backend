@@ -13,6 +13,12 @@ from masters.models              import Master
 from quotations.models import Quotation
 from services.models import MasterService
 
+from masters.models import Region
+from core.views     import master_signin_check, AWSAPI
+from my_settings    import BUCKET, AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID
+
+
+
 class MasterSignupView(View):
     def post(self, request):
         try:
@@ -91,7 +97,6 @@ class MasterKakaoSigninView(View):
         except KeyError:
             return JsonResponse({'message': 'INVALID_KEY'}, status = 400)
 
-
 class MasterView(View):
     def get(self, request, master_id):
         try:
@@ -130,3 +135,30 @@ class MasterView(View):
             return JsonResponse({'message':'TYPE_ERROR'}, status=400)
         except ValueError:
             return JsonResponse({'message':'VALUE_ERROR'}, status=400)
+
+    @master_signin_check
+    def patch(self, request):
+        data   = json.loads(request.body)
+        master = request.master
+
+        master.name          = data.get("name", master.name)
+        master.introduction  = data.get("introduction", master.introduction)
+        master.career        = data.get("career", master.career)
+        master.business      = data.get("business", master.business)
+        master.certification = data.get("certification", master.certification)
+        master.description   = data.get("description", master.description)
+        master.region        = Region.objects.get(name=data.get("region", master.region.name))
+        master.save()
+
+        return JsonResponse({'message':'UPDATED'}, status=200) 
+
+    @master_signin_check
+    def post(self, request):
+        master                = request.master
+        master.uploading_file = request.FILES.get('profile_image')
+        aws                   = AWSAPI(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, BUCKET)
+
+        master.profile_image  = aws.upload_file(master.uploading_file)
+        master.save()
+
+        return JsonResponse({'message':'SUCCESS'}, status=200)
