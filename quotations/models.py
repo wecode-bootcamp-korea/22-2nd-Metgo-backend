@@ -6,6 +6,7 @@ from django.db.models.fields.related import ForeignKey
 from core.models import TimeStampModel
 
 class Quotation(TimeStampModel):
+
     class Status(TextChoices):
         WAITING  = 'waiting'
         ACCEPTED = 'accepted'

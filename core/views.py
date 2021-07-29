@@ -19,7 +19,7 @@ def user_signin_check(func):
             return JsonResponse({"message":"DECODE_ERROR"}, status=400)
 
     return wrapper
-    
+
 def master_signin_check(func):
     def wrapper(self,request, *args, **kwargs):
         try:
@@ -31,5 +31,3 @@ def master_signin_check(func):
 
         except jwt.DecodeError:
             return JsonResponse({"message":"DECODE_ERROR"}, status=400)
-
-    return wrapper
