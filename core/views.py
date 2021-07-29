@@ -1,7 +1,7 @@
 import jwt
 
-from django.http import JsonResponse
-from my_settings import SECRET_KEY, ALGORITHM
+from django.http    import JsonResponse
+from my_settings    import SECRET_KEY, ALGORITHM
 
 from users.models   import User
 from masters.models import Master
@@ -31,3 +31,6 @@ def master_signin_check(func):
 
         except jwt.DecodeError:
             return JsonResponse({"message":"DECODE_ERROR"}, status=400)
+
+    return wrapper 
+
