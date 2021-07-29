@@ -1,5 +1,4 @@
 from django.urls    import path, include
-
 from services.views import ServicesView, CategoryView
 
 urlpatterns = [
@@ -10,4 +9,3 @@ urlpatterns = [
     path('masters', include('masters.urls')),
     path('applications', include('applications.urls')),
 ]
-

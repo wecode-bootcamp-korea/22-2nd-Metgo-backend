@@ -1,5 +1,4 @@
 from django.urls import path
-
 from masters.views import MasterSignupView, MasterSigninView, MasterKakaoSigninView, MasterView
 
 urlpatterns = [
